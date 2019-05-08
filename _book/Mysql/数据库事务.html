@@ -1,0 +1,383 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>01：数据库事务 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="数据库事务.html" />
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Mysql
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.2.1" data-path="数据库事务.html">
+            
+                <a href="数据库事务.html">
+            
+                    
+                    01：数据库事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.2" data-path="数据库事务.html">
+            
+                <a href="数据库事务.html">
+            
+                    
+                    02：多版本并发MVCC
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.3" data-path="数据库事务.html">
+            
+                <a href="数据库事务.html">
+            
+                    
+                    03：数据库引擎
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.4" data-path="数据库事务.html">
+            
+                <a href="数据库事务.html">
+            
+                    
+                    04：数据库事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="慢查询.html">
+            
+                <a href="慢查询.html">
+            
+                    
+                    05：慢查询
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="慢查询.html">
+            
+                <a href="慢查询.html">
+            
+                    
+                    06：数据库字段
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="数据库索引.html">
+            
+                <a href="数据库索引.html">
+            
+                    
+                    07：数据库索引
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="数据库索引.html">
+            
+                <a href="数据库索引.html">
+            
+                    
+                    08：查询优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >01：数据库事务</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="1&#x4E8B;&#x52A1;acid">1.&#x4E8B;&#x52A1;ACID</h2>
+<ul>
+<li>&#x539F;&#x5B50;&#x6027;&#xFF08;atomicity&#xFF09;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x5FC5;&#x987B;&#x88AB;&#x89C6;&#x4E3A;&#x4E00;&#x4E2A;&#x4E0D;&#x53EF;&#x5206;&#x5272;&#x7684;&#x6700;&#x5C0F;&#x5DE5;&#x4F5C;&#x5355;&#x5143;&#xFF0C;&#x6574;&#x4E2A;&#x4E8B;&#x52A1;&#x4E2D;&#x6240;&#x6709;&#x64CD;&#x4F5C;&#x8981;&#x4E48;&#x5168;&#x90E8;&#x63D0;&#x4EA4;&#x6210;&#x529F;&#xFF0C;&#x8981;&#x4E48;&#x5168;&#x90E8;&#x5931;&#x8D25;&#x56DE;&#x6EDA;&#xFF0C;&#x5BF9;&#x4E8E;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x6765;&#x8BF4;&#xFF0C;&#x4E0D;&#x53EF;&#x80FD;&#x53EA;&#x6267;&#x884C;&#x5176;&#x4E2D;&#x7684;&#x4E00;&#x90E8;&#x5206;&#x64CD;&#x4F5C;</li>
+<li>&#x4E00;&#x81F4;&#x6027;&#xFF08;consistency&#xFF09;&#x6570;&#x636E;&#x5E93;&#x603B;&#x662F;&#x4ECE;&#x4E00;&#x4E2A;&#x4E00;&#x81F4;&#x6027;&#x7684;&#x72B6;&#x6001;&#x8F6C;&#x6362;&#x5230;&#x53E6;&#x5916;&#x4E00;&#x4E2A;&#x4E00;&#x81F4;&#x6027;&#x7684;&#x72B6;&#x6001;</li>
+<li><p>&#x9694;&#x79BB;&#x6027;&#xFF08;isolation&#xFF09;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x6240;&#x505A;&#x7684;&#x4FEE;&#x6539;&#x5728;&#x6700;&#x7EC8;&#x63D0;&#x4EA4;&#x4EE5;&#x524D;&#xFF0C;&#x5BF9;&#x5176;&#x4ED6;&#x4E8B;&#x52A1;&#x662F;&#x4E0D;&#x53EF;&#x89C1;&#x7684;</p>
+</li>
+<li><p>&#x6301;&#x4E45;&#x6027;&#xFF08;durability&#xFF09;&#x4E00;&#x65E6;&#x4E8B;&#x52A1;&#x63D0;&#x4EA4;&#xFF0C;&#x5219;&#x5176;&#x6240;&#x505A;&#x7684;&#x4FEE;&#x6539;&#x5C31;&#x4F1A;&#x6C38;&#x4E45;&#x4FDD;&#x5B58;&#x5230;&#x6570;&#x636E;&#x5E93;&#x4E2D;</p>
+</li>
+</ul>
+<h2 id="&#x4E8B;&#x52A1;&#x9694;&#x79BB;&#x7EA7;&#x522B;">&#x4E8B;&#x52A1;&#x9694;&#x79BB;&#x7EA7;&#x522B;</h2>
+<ul>
+<li><p>READ UNCOMMITTED&#xFF08;&#x672A;&#x63D0;&#x4EA4;&#x8BFB;&#xFF09;&#xFF0C;&#x4E8B;&#x52A1;&#x4E2D;&#x7684;&#x4FEE;&#x6539;&#xFF0C;&#x5373;&#x4F7F;&#x6CA1;&#x6709;&#x63D0;&#x4EA4;&#xFF0C;&#x5BF9;&#x5176;&#x4ED6;&#x4E8B;&#x52A1;&#x4E5F;&#x90FD;&#x662F;&#x53EF;&#x89C1;&#x7684;&#xFF0C;&#x4E8B;&#x52A1;&#x53EF;&#x4EE5;&#x8BFB;&#x53D6;&#x672A;&#x63D0;&#x4EA4;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x4E5F;&#x88AB;&#x79F0;&#x4E3A;&#x810F;&#x8BFB;&#xFF08;Dirty Read&#xFF09;&#xFF0C;&#x8FD9;&#x4E2A;&#x7EA7;&#x522B;&#x4F1A;&#x5BFC;&#x81F4;&#x5F88;&#x591A;&#x95EE;&#x9898;</p>
+</li>
+<li><p>READ COMMITTED&#xFF08;&#x63D0;&#x4EA4;&#x8BFB;&#xFF09;&#xFF0C;&#x5927;&#x591A;&#x6570;&#x6570;&#x636E;&#x5E93;&#x7CFB;&#x7EDF;&#x7684;&#x9ED8;&#x8BA4;&#x9694;&#x79BB;&#x7EA7;&#x522B;&#xFF0C;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x5F00;&#x59CB;&#x65F6;&#xFF0C;&#x53EA;&#x80FD;&#x201C;&#x770B;&#x89C1;&#x201D;&#x5DF2;&#x7ECF;&#x63D0;&#x4EA4;&#x7684;&#x4E8B;&#x52A1;&#x6240;&#x505A;&#x7684;&#x4FEE;&#x6539;&#xFF0C;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x4ECE;&#x5F00;&#x59CB;&#x76F4;&#x5230;&#x63D0;&#x4EA4;&#x4E4B;&#x524D;&#xFF0C;&#x6240;&#x505A;&#x7684;&#x4EFB;&#x4F55;&#x4FEE;&#x6539;&#x5BF9;&#x5176;&#x4ED6;&#x4E8B;&#x52A1;&#x90FD;&#x662F;&#x4E0D;&#x53EF;&#x89C1;&#x7684;&#xFF0C;&#x4E5F;&#x53EB;&#x4E0D;&#x53EF;&#x91CD;&#x590D;&#x8BFB;&#xFF08;nonrepeatable read&#xFF09;&#xFF0C;&#x6709;&#x53EF;&#x80FD;&#x51FA;&#x73B0;&#x5E7B;&#x8BFB;&#xFF08;Phantom Read&#xFF09;&#xFF0C;&#x6307;&#x7684;&#x662F;&#x5F53;&#x67D0;&#x4E2A;&#x4E8B;&#x52A1;&#x5728;&#x8BFB;&#x53D6;&#x67D0;&#x4E2A;&#x8303;&#x56F4;&#x5185;&#x7684;&#x8BB0;&#x5F55;&#x65F6;&#xFF0C;&#x53E6;&#x5916;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x53C8;&#x5728;&#x8BE5;&#x8303;&#x56F4;&#x5185;&#x63D2;&#x5165;&#x4E86;&#x65B0;&#x7684;&#x8BB0;&#x5F55;&#xFF0C;&#x5F53;&#x4E4B;&#x524D;&#x7684;&#x4E8B;&#x52A1;&#x518D;&#x6B21;&#x8BFB;&#x53D6;&#x8BE5;&#x8303;&#x56F4;&#x7684;&#x8BB0;&#x5F55;&#x65F6;&#xFF0C;&#x4F1A;&#x4EA7;&#x751F;&#x5E7B;&#x884C;&#xFF08;Phantom Row&#xFF09;</p>
+</li>
+<li><p>REPEATABLE READ&#xFF08;&#x53EF;&#x91CD;&#x590D;&#x8BFB;&#xFF09;&#xFF0C;&#x901A;&#x8FC7;InnoDB&#x548C;XtraDB&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#xFF0C;&#x662F;MySQL&#x7684;&#x9ED8;&#x8BA4;&#x4E8B;&#x52A1;&#x9694;&#x79BB;&#x7EA7;&#x522B;</p>
+</li>
+<li><p>SERIALIZABLE&#xFF08;&#x53EF;&#x4E32;&#x884C;&#x5316;&#xFF09;&#x6700;&#x9AD8;&#x7EA7;&#x522B;&#xFF0C;&#x901A;&#x8FC7;&#x5F3A;&#x5236;&#x4E8B;&#x52A1;&#x4E32;&#x884C;&#x6267;&#x884C;&#xFF0C;&#x907F;&#x514D;&#x4E86;&#x5E7B;&#x8BFB;&#x95EE;&#x9898;&#xFF0C;&#x4F1A;&#x5728;&#x8BFB;&#x53D6;&#x7684;&#x6BCF;&#x4E00;&#x884C;&#x6570;&#x636E;&#x4E0A;&#x90FD;&#x52A0;&#x9501;&#xFF0C;&#x53EF;&#x80FD;&#x5BFC;&#x81F4;&#x5927;&#x91CF;&#x7684;&#x8D85;&#x65F6;&#x548C;&#x9501;&#x4E89;&#x7528;&#x7684;&#x95EE;&#x9898;</p>
+</li>
+</ul>
+<blockquote>
+<p>&#x4E0D;&#x53EF;&#x91CD;&#x590D;&#x8BFB;&#xFF1A;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x5185;&#xFF0C;&#x4E24;&#x6B21;&#x67E5;&#x8BE2;&#x7684;&#x7ED3;&#x679C;&#x4E0D;&#x540C;&#xFF1B;&#x539F;&#x56E0;&#x662F;&#x6CA1;&#x6709;&#x9501;&#x4F4F;&#x67E5;&#x8BE2;&#x8303;&#x56F4;&#x7684;&#x8BB0;&#x5F55;&#xFF1B;</p>
+<p>&#x53EF;&#x91CD;&#x590D;&#x8BFB;&#xFF1A;&#x9501;&#x4F4F;&#x67E5;&#x8BE2;&#x8303;&#x56F4;+&#x4E0A;&#x4E0B;&#x884C;&#xFF1F;&#x7684;&#x6570;&#x636E;&#xFF1B;&#x4FDD;&#x8BC1;&#x8303;&#x56F4;&#x5185;&#x7684;&#x6570;&#x636E;&#x4E0D;&#x4F1A;&#x88AB;&#x66F4;&#x65B0;&#xFF1B;&#x65E0;&#x6CD5;&#x4FDD;&#x8BC1;&#x5E7B;&#x8BFB;(&#x65B0;&#x589E;&#x6216;&#x5220;&#x9664;&#x64CD;&#x4F5C;)</p>
+<p>&#x5E7B;&#x8BFB;&#xFF1A;&#x7531;&#x4E8E;&#x65B0;&#x589E;&#x6216;&#x5220;&#x9664;&#xFF0C;&#x800C;&#x4EA7;&#x751F;&#x591A;&#x5EA6;&#x6216;&#x5C11;&#x8BFB;&#x6570;&#x636E;&#x7684;&#x60C5;&#x51B5;&#xFF1B;&#x5E7B;&#x8BFB;&#x4E00;&#x822C;&#x662F;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x7684;&#xFF0C;&#x4E0D;&#x8FC7;&#x5728;&#x6253;&#x5F00;&#x6E38;&#x6807;&#x65F6;&#xFF0C;&#x5E7B;&#x8BFB;&#x5C31;&#x4F1A;&#x5E26;&#x6765;&#x56F0;&#x6270;&#xFF1B;&#x89E3;&#x51B3;&#x5E7B;&#x8BFB;&#x662F;&#x901A;&#x8FC7;&#x9501;&#x8868;&#x7684;&#x65B9;&#x5F0F;&#x89E3;&#x51B3;&#x7684;&#xFF1B;</p>
+<p>Mysql&#x7684;&#x9ED8;&#x8BA4;&#x7EA7;&#x522B;&#x662F;&#x53EF;&#x91CD;&#x590D;&#x8BFB;</p>
+<p>&#x8BFB;&#x63D0;&#x4EA4;&#x7406;&#x89E3;&#x6210;&#x9501;&#x4E00;&#x884C;&#x8BB0;&#x5F55;&#xFF1B;&#x53EF;&#x91CD;&#x590D;&#x8BFB;&#x9501;&#x591A;&#x884C;&#xFF1B;&#x4E32;&#x884C;&#x8BFB;&#x9501;&#x8868;</p>
+</blockquote>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: Mysql">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="数据库事务.html" class="navigation navigation-next " aria-label="Next page: 02：多版本并发MVCC">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"01：数据库事务","level":"1.2.1","depth":2,"next":{"title":"02：多版本并发MVCC","level":"1.2.2","depth":2,"path":"Mysql/数据库事务.md","ref":"Mysql/数据库事务.md","articles":[]},"previous":{"title":"Mysql","level":"1.2","depth":1,"path":"Mysql/README.md","ref":"Mysql/README.md","articles":[{"title":"01：数据库事务","level":"1.2.1","depth":2,"path":"Mysql/数据库事务.md","ref":"Mysql/数据库事务.md","articles":[]},{"title":"02：多版本并发MVCC","level":"1.2.2","depth":2,"path":"Mysql/数据库事务.md","ref":"Mysql/数据库事务.md","articles":[]},{"title":"03：数据库引擎","level":"1.2.3","depth":2,"path":"Mysql/数据库事务.md","ref":"Mysql/数据库事务.md","articles":[]},{"title":"04：数据库事务","level":"1.2.4","depth":2,"path":"Mysql/数据库事务.md","ref":"Mysql/数据库事务.md","articles":[]},{"title":"05：慢查询","level":"1.2.5","depth":2,"path":"Mysql/慢查询.md","ref":"Mysql/慢查询.md","articles":[]},{"title":"06：数据库字段","level":"1.2.6","depth":2,"path":"Mysql/慢查询.md","ref":"Mysql/慢查询.md","articles":[]},{"title":"07：数据库索引","level":"1.2.7","depth":2,"path":"Mysql/数据库索引.md","ref":"Mysql/数据库索引.md","articles":[]},{"title":"08：查询优化","level":"1.2.8","depth":2,"path":"Mysql/数据库索引.md","ref":"Mysql/数据库索引.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Mysql/数据库事务.md","mtime":"2019-05-08T14:20:47.389Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-08T13:01:22.732Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
