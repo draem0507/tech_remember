@@ -1,0 +1,41 @@
+# **背景**
+
+Timer的优点在于简单易用，但是由于所有的任务都是由同一个线程来调度，因此所有的任务都是串行执行的，同一时间只能有一个任务在执行，在前一个任务的延时都会影响到之后的任务。同时，Timer不会捕获TimerTask的异常，只是简单的停止，这样也肯定会影响到之后任务的执行。当然可以为了完成多线程适应多个Timer，只是这些Timer需要自己来管理，而不是一个框架体系。
+
+鉴于Timer的上述缺陷，Java5推出了基于线程池设计的ScheduledThreadPoolExecutor。其设计思想是，每一个被调度的任务都会由线程池中的一个线程去执行，因此任务是并发的，相互之间不会有干扰。
+
+而且，只有当任务的执行时间到来时，ScheduledThreadPoolExecutor才会真正的启动一个线程，其余时间ScheduledThreadPoolExecutor都是在轮询任务的状态。
+
+# **Java中的ScheduledThreadPoolExecutor类**
+
+https://www.jianshu.com/p/a8bb4db97643
+
+
+
+# **总结：**
+
+
+
+1.ScheduledThreadPoolExecutor继承自ThreadPoolExecutor，所以本质上说ScheduledThreadPoolExecutor还是一个线程池，也有coorPoolSize和workQueue，接受Runnable的子类作为任务被多线程调，特殊的地方在于，自己实现了工作队列，
+
+目的是能够按一定的顺序对工作队列中的元素进行排序，比如，按照距离下次执行时间的长短的升序方式排列工作任务，让需要
+
+尽快执行的任务排在队首，“不那么着急”的任务排在队列后方。从而方便线程获取执行任务。
+
+并配合FutureTask执行但是不设置结果的API:runAndReset() 来实现任务的周期执行（每次执行完毕后不设置执行结果，而是计
+
+算出下次执行的时间，重新放到工作队列中，等待下次调用）。
+
+2.调用的ScheduledFutureTask的包装，由在ThreadPoolExecutor中的Worker调用你传入的Runnable的run方法，变成了Worker调用Runnable的run方法，由它来处理时间片的信息调用你传入的线程。
+
+3.ScheduledFutureTask类在整个过程中提供了基础参考的方法，其中最为关键的就是实现了接口Comparable，实现内部的compareTo方法，也实现了Delayed接口中的getDelay方法用以判定时间
+
+4.等待队列由在ThreadPoolExecutor中默认使用的LinkedBlockingQueue换成了DelayQueue（它是被DelayWorkQueue包装了一下子，没多大区别），而DelayQueue主要提供了一个信号量“available”来作为写入和读取的信号控制开关，通过另一个优先级队列“PriorityQueue”来控制实际的队列顺序，他们的顺序就是基于上面提到的ScheduledFutureTask类中的compareTo方法，而是否运行也是基于getDelay方法来实现的。
+
+
+
+5.ScheduledFutureTask类的run方法会判定是否为时间片信息，如果为时间片，在执行完对应的方法后，开始计算下一次执行时间（注意判定时间片大于0，小于0，分别代表的是以当前执行完的时间为准计算下一次时间还是以当前时间为准），这个在前面有提到。
+
+
+
+6.它是支持多线程的，和Timer的机制最大的区别就在于多个线程会最征用这个队列，队里的排序方式和Timer有很多相似之处，并非完全有序，而是通过位移动来尽量找到合适的位置，有点类似贪心的算法。 
